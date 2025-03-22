@@ -1,0 +1,108 @@
+{% extends 'task/base.html' %}
+{% load widget_tweaks %}
+{% block title %}My Tasks - Smart Task Manager{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2"><i class="fas fa-tasks text-primary me-2"></i>My Tasks</h1>
+                <a href="{% url 'task:task_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i> New Task
+                </a>
+            </div>
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'task:task_list' %}" class="btn btn-outline-primary {% if not filter %}active{% endif %}">
+                                    All
+                                </a>
+                                <a href="{% url 'task:task_list' %}?filter=pending" class="btn btn-outline-primary {% if filter == 'pending' %}active{% endif %}">
+                                    Pending
+                                </a>
+                                <a href="{% url 'task:task_list' %}?filter=completed" class="btn btn-outline-primary {% if filter == 'completed' %}active{% endif %}">
+                                    Completed
+                                </a>
+                                <a href="{% url 'task:task_list' %}?filter=today" class="btn btn-outline-primary {% if filter == 'today' %}active{% endif %}">
+                                    Today
+                                </a>
+                                <a href="{% url 'task:task_list' %}?filter=week" class="btn btn-outline-primary {% if filter == 'week' %}active{% endif %}">
+                                    This Week
+                                </a>
+                                <a href="{% url 'task:task_list' %}?filter=overdue" class="btn btn-outline-primary {% if filter == 'overdue' %}active{% endif %}">
+                                    Overdue
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <form method="get" class="d-flex">
+                                <input type="text" name="search" class="form-control" placeholder="Search tasks...">
+                                <button type="submit" class="btn btn-outline-primary ms-2">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if tasks %}
+                    <div class="list-group list-group-flush">
+                        {% for task in tasks %}
+                        <div class="list-group-item list-group-item-action p-3 {% if task.completed %}completed-task{% endif %} priority-{{ task.priority }}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-1">
+                                        {% if task.completed %}
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <span class="text-decoration-line-through">{{ task.title }}</span>
+                                        {% else %}
+                                        <i class="fas fa-circle {% if task.priority == 'high' %}text-danger{% elif task.priority == 'medium' %}text-warning{% else %}text-primary{% endif %} me-2"></i>
+                                        {{ task.title }}
+                                        {% endif %}
+                                    </h5>
+                                    {% if task.due_date %}
+                                    <p class="mb-1 small">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        {% if task.is_overdue and not task.completed %}
+                                        <span class="text-danger">Due: {{ task.due_date|date:"M d, Y" }}</span>
+                                        {% else %}
+                                        <span>Due: {{ task.due_date|date:"M d, Y" }}</span>
+                                        {% endif %}
+                                    </p>
+                                    {% endif %}
+                                </div>
+                                <div class="task-actions">
+                                    <a href="{% url 'task:task_detail' task.id %}" class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'task:task_update' task.id %}" class="btn btn-sm btn-outline-secondary me-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'task:task_delete' task.id %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-tasks text-muted fa-3x mb-3"></i>
+                        <h4>No tasks found</h4>
+                        <p class="text-muted">{% if filter %}Try changing your filter or {% endif %}create a new task to get started.</p>
+                        <a href="{% url 'task:task_create' %}" class="btn btn-primary mt-2">
+                            <i class="fas fa-plus me-1"></i> Create New Task
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'task/base.html' %}
+{% load widget_tweaks %}
+{% block title %}Smart Task Manager - Home{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <h1 class="display-4 mb-4"><i class="fas fa-tasks text-primary me-3"></i>Smart Task Manager</h1>
+            <p class="lead mb-5">Organize your tasks, boost your productivity, and get AI-powered insights to work smarter.</p>
+            
+            {% if user.is_authenticated %}
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                    <a href="{% url 'task:task_list' %}" class="btn btn-primary btn-lg px-4 gap-3">
+                        <i class="fas fa-list me-2"></i>View My Tasks
+                    </a>
+                    <a href="{% url 'task:task_create' %}" class="btn btn-outline-primary btn-lg px-4">
+                        <i class="fas fa-plus me-2"></i>Create New Task
+                    </a>
+                </div>
+            {% else %}
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                    <a href="{% url 'task:login' %}" class="btn btn-primary btn-lg px-4 gap-3">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                    <a href="{% url 'task:register' %}" class="btn btn-outline-primary btn-lg px-4">
+                        <i class="fas fa-user-plus me-2"></i>Register
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row mt-5 pt-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                    <h3 class="card-title">Task Management</h3>
+                    <p class="card-text">Create, organize, and track your tasks with deadlines and priority levels.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-sticky-note text-warning fa-3x mb-3"></i>
+                    <h3 class="card-title">Notes</h3>
+                    <p class="card-text">Keep important information and ideas organized alongside your tasks.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-robot text-primary fa-3x mb-3"></i>
+                    <h3 class="card-title">AI Summary</h3>
+                    <p class="card-text">Get smart insights about your productivity and task completion patterns.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

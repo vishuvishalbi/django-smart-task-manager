@@ -1,0 +1,101 @@
+{% extends 'task/base.html' %}
+
+{% block title %}AI Summary - Smart Task Manager{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2"><i class="fas fa-robot text-primary me-2"></i>AI Productivity Summary</h1>
+                <div class="btn-group" role="group">
+                    <a href="{% url 'task:ai_summary' %}?period=week" class="btn btn-outline-primary {% if period == 'week' %}active{% endif %}">Week</a>
+                    <a href="{% url 'task:ai_summary' %}?period=month" class="btn btn-outline-primary {% if period == 'month' %}active{% endif %}">Month</a>
+                    <a href="{% url 'task:ai_summary' %}?period=year" class="btn btn-outline-primary {% if period == 'year' %}active{% endif %}">Year</a>
+                    <a href="{% url 'task:ai_summary' %}?period=all" class="btn btn-outline-primary {% if period == 'all' %}active{% endif %}">All Time</a>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Task Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <h3 class="display-4">{{ summary.stats.total_tasks }}</h3>
+                                <p class="mb-0">Total Tasks</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="p-3 bg-success bg-opacity-10 rounded">
+                                <h3 class="display-4 text-success">{{ summary.stats.completed_tasks }}</h3>
+                                <p class="mb-0">Completed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="p-3 bg-primary bg-opacity-10 rounded">
+                                <h3 class="display-4 text-primary">{{ summary.stats.pending_tasks }}</h3>
+                                <p class="mb-0">Pending</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="p-3 bg-danger bg-opacity-10 rounded">
+                                <h3 class="display-4 text-danger">{{ summary.stats.overdue_tasks }}</h3>
+                                <p class="mb-0">Overdue</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ summary.stats.completion_rate }}%" 
+                                aria-valuenow="{{ summary.stats.completion_rate }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ summary.stats.completion_rate }}% Complete
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0"><i class="fas fa-lightbulb text-warning me-2"></i>Insights</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                {% for insight in summary.insights %}
+                                <li class="list-group-item">{{ insight }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0"><i class="fas fa-thumbs-up text-primary me-2"></i>Recommendations</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                {% for recommendation in summary.recommendations %}
+                                <li class="list-group-item">{{ recommendation }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-3">
+                <a href="{% url 'task:task_list' %}" class="btn btn-primary">
+                    <i class="fas fa-tasks me-1"></i> Go to Tasks
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
